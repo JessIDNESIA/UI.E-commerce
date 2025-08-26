@@ -14,6 +14,9 @@ class MyApp extends StatelessWidget {
       initialRoute: "/login",
       routes: {
         "/login": (context) => const LoginPage(),
+        // Contoh rute lain (Opsional)
+        // "/signup": (context) => const SignupPage(),
+        // "/home": (context) => const HomePage(),
       },
     );
   }
@@ -94,29 +97,62 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
+  
+  Widget _buildLoginButton(BuildContext context) {
+          // Navigasi ke halaman akun
+          // Navigator.pushReplacementNamed(context, '/home');
+    return ElevatedButton(
+      onPressed: () {
+        if (_formKey.currentState!.validate()) {
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF4C53A5),
+        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      ),
+      child: const Text(
+        'Login',
+        style: TextStyle(color: Colors.white, fontSize: 18),
+      ),
+    );
+  }
+  
+  Widget _buildSignupLink(BuildContext context) {
+        // Navigasi ke halaman pendaftaran
+        // Navigator.pushNamed(context, '/signup');
+    return TextButton(
+      onPressed: () {
+      },
+      child: const Text(
+        'Don\'t have an account? Sign Up',
+        style: TextStyle(color: Color(0xFF4C53A5)),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 30),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildEmailField(),
-                    const SizedBox(height: 16),
-                    _buildPasswordField(),
-                  ],
-                ),
-              ),
-            ],
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildHeader(),
+                const SizedBox(height: 40),
+                _buildEmailField(),
+                const SizedBox(height: 20),
+                _buildPasswordField(),
+                const SizedBox(height: 30),
+                _buildLoginButton(context),
+                const SizedBox(height: 20),
+                _buildSignupLink(context),
+              ],
+            ),
           ),
         ),
       ),
