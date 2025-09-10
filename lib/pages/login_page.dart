@@ -1,26 +1,6 @@
+// lib/pages/login_page.dart
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      initialRoute: "/login",
-      routes: {
-        "/login": (context) => const LoginPage(),
-        // Contoh rute lain (Opsional)
-        // "/signup": (context) => const SignupPage(),
-        // "/home": (context) => const HomePage(),
-      },
-    );
-  }
-}
+import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,28 +11,42 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   Widget _buildHeader() {
-    return const Column(
+    return Column(
       children: [
-        Text(
-          'Welcome Back!',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF4C53A5),
+        ClipOval(
+          child: Image.asset(
+            'assets/images/dummy.jpeg',
+            width: 100,
+            height: 100,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(Icons.error, size: 100, color: Colors.red);
+            },
           ),
         ),
-        SizedBox(height: 10),
-        Text(
-          'Login to continue',
-          style: TextStyle(
-            fontSize: 18,
-            color: Color(0xFF4C53A5),
-          ),
+        const SizedBox(height: 16),
+        const Text(
+          'Selamat Datang Kembali',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
+        const SizedBox(height: 10),
+        const Text(
+          'Masuk ke akun Anda',
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -62,14 +56,17 @@ class _LoginPageState extends State<LoginPage> {
       controller: _emailController,
       decoration: InputDecoration(
         labelText: 'Email',
-        prefixIcon: const Icon(Icons.email, color: Color(0xFF4C53A5)),
+        icon: const Icon(Icons.email),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        filled: true,
+        fillColor: Colors.grey[100],
       ),
+      keyboardType: TextInputType.emailAddress,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Email tidak boleh kosong';
         }
-        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+        if (!EmailValidator.validate(value)) {
           return 'Format email tidak valid';
         }
         return null;
@@ -80,53 +77,62 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildPasswordField() {
     return TextFormField(
       controller: _passwordController,
+      obscureText: _obscurePassword,
       decoration: InputDecoration(
-        labelText: 'Password',
-        prefixIcon: const Icon(Icons.lock, color: Color(0xFF4C53A5)),
+        labelText: 'Kata Sandi',
+        icon: const Icon(Icons.lock),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+        filled: true,
+        fillColor: Colors.grey[100],
+        suffixIcon: IconButton(
+          icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+          onPressed: () {
+            setState(() {
+              _obscurePassword = !_obscurePassword;
+            });
+          },
+        ),
       ),
-      obscureText: true,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Password tidak boleh kosong';
+          return 'Kata sandi tidak boleh kosong';
         }
         if (value.length < 6) {
-          return 'Password minimal 6 karakter';
+          return 'Kata sandi minimal 6 karakter';
         }
         return null;
       },
     );
   }
-  
-  Widget _buildLoginButton(BuildContext context) {
-          // Navigasi ke halaman akun
-          // Navigator.pushReplacementNamed(context, '/home');
+
+  Widget _buildLoginButton() {
     return ElevatedButton(
       onPressed: () {
         if (_formKey.currentState!.validate()) {
+          Navigator.pushNamed(context, '/home');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Berhasil Masuk')),
+          );
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF4C53A5),
-        padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
       ),
-      child: const Text(
-        'Login',
-        style: TextStyle(color: Colors.white, fontSize: 18),
-      ),
+      child: const Text('Masuk', style: TextStyle(fontSize: 16)),
     );
   }
-  
-  Widget _buildSignupLink(BuildContext context) {
-        // Navigasi ke halaman pendaftaran
-        // Navigator.pushNamed(context, '/signup');
+
+  Widget _buildSignupLink() {
     return TextButton(
       onPressed: () {
+        Navigator.pushNamed(context, '/register');
       },
       child: const Text(
-        'Don\'t have an account? Sign Up',
-        style: TextStyle(color: Color(0xFF4C53A5)),
+        'Belum punya akun? Daftar',
+        style: TextStyle(color: Colors.blue),
       ),
     );
   }
@@ -134,25 +140,26 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildHeader(),
-                const SizedBox(height: 40),
-                _buildEmailField(),
-                const SizedBox(height: 20),
-                _buildPasswordField(),
-                const SizedBox(height: 30),
-                _buildLoginButton(context),
-                const SizedBox(height: 20),
-                _buildSignupLink(context),
-              ],
-            ),
+      appBar: AppBar(
+        title: const Text('Masuk'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              _buildHeader(),
+              _buildEmailField(),
+              const SizedBox(height: 16),
+              _buildPasswordField(),
+              const SizedBox(height: 20),
+              _buildLoginButton(),
+              const SizedBox(height: 10),
+              _buildSignupLink(),
+            ],
           ),
         ),
       ),
