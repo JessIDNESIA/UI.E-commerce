@@ -8,7 +8,7 @@ import 'cart_page.dart';
 import 'account_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key}); // ✅ const + key
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -18,9 +18,13 @@ class _HomePageState extends State<HomePage> {
   int _pageIndex = 0;
   final PageController _pageController = PageController();
 
+  // Define the color palette from AccountPage
+  static const Color primaryColor = Color(0xFF4C53A5);
+  static const Color secondaryColor = Color(0xFF6B7CDA);
+
   @override
   void dispose() {
-    _pageController.dispose(); // ✅ hindari memory leak
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -39,9 +43,9 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: CurvedNavigationBar(
         index: _pageIndex,
         items: [
-          Icon(Icons.home, color: _pageIndex == 0 ? Colors.white : Colors.black),
-          Icon(Icons.shopping_cart, color: _pageIndex == 1 ? Colors.white : Colors.black),
-          Icon(Icons.person, color: _pageIndex == 2 ? Colors.white : Colors.black),
+          Icon(Icons.home, color: _pageIndex == 0 ? Colors.white : primaryColor),
+          Icon(Icons.shopping_cart, color: _pageIndex == 1 ? Colors.white : primaryColor),
+          Icon(Icons.person, color: _pageIndex == 2 ? Colors.white : primaryColor),
         ],
         onTap: (index) {
           _pageController.animateToPage(
@@ -51,19 +55,25 @@ class _HomePageState extends State<HomePage> {
           );
         },
         backgroundColor: Colors.transparent,
-        buttonBackgroundColor: const Color(0xFF4C53A5), // ✅ konsisten warna brand
-        color: Colors.grey[200]!,
+        buttonBackgroundColor: primaryColor,
+        color: Colors.white,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
       ),
     );
   }
 }
 
 class HomePageContent extends StatelessWidget {
-  const HomePageContent({super.key}); // ✅ const biar lebih optimal
+  const HomePageContent({super.key});
+
+  // Define the color palette from AccountPage
+  static const Color primaryColor = Color(0xFF4C53A5);
+  static const Color secondaryColor = Color(0xFF6B7CDA);
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea( // ✅ biar UI tidak ketabrak notch/status bar
+    return SafeArea(
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -85,22 +95,34 @@ class HomePageContent extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
+                      color: Colors.grey[50],
                       borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: primaryColor.withOpacity(0.2),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryColor.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-                        Icon(Icons.search),
-                        SizedBox(width: 10),
+                        Icon(Icons.search, color: primaryColor),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: TextField(
                             decoration: InputDecoration(
                               hintText: 'Cari Produk',
+                              hintStyle: TextStyle(color: Colors.grey[600]),
                               border: InputBorder.none,
                             ),
                           ),
                         ),
-                        Icon(Icons.camera_alt),
+                        Icon(Icons.camera_alt, color: primaryColor),
                       ],
                     ),
                   ),
@@ -108,10 +130,14 @@ class HomePageContent extends StatelessWidget {
                   // 📂 Kategori
                   Container(
                     alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                    child: const Text(
+                    margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                    child: Text(
                       'Kategori',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: primaryColor,
+                      ),
                     ),
                   ),
                   const CategoriesWidget(),
@@ -119,19 +145,26 @@ class HomePageContent extends StatelessWidget {
                   // 🔥 Terlaris
                   Container(
                     alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                    child: const Row(
+                    margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                    child: Row(
                       children: [
                         Text(
                           'Terlaris',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                            color: primaryColor,
+                          ),
                         ),
-                        SizedBox(width: 10),
-                        Icon(Icons.filter_list),
+                        const SizedBox(width: 10),
+                        Icon(Icons.filter_list, color: primaryColor),
                       ],
                     ),
                   ),
                   const ItemsWidget(),
+
+                  // Spacer bottom
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

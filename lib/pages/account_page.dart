@@ -108,7 +108,7 @@ class AccountPage extends StatelessWidget {
           icon: Icons.lock_outline,
           title: 'Change Password',
           onTap: () {
-            Navigator.pushNamed(context, '/changePassword');
+            Navigator.pushNamed(context, '/change_password');
           },
         ),
         _buildSettingItem(
@@ -168,7 +168,7 @@ class AccountPage extends StatelessWidget {
                     content: Text('Logout Successful!'),
                   ),
                 );
-                Navigator.pushReplacementNamed(context, '/');
+                Navigator.pushReplacementNamed(context, '/login'); // kembali ke HomePage
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4C53A5),
@@ -230,3 +230,16 @@ class AccountPage extends StatelessWidget {
     );
   }
 }
+
+
+/// ====================
+/// KESIMPULAN
+/// ====================
+/// 1. Halaman `AccountPage` menampilkan profil pengguna + menu pengaturan.
+/// 2. Ada beberapa menu seperti Profile, Change Password, Notifications, Help, dan Logout.
+/// 3. Logout menggunakan dialog konfirmasi:
+///    - Jika "Cancel", dialog ditutup.
+///    - Jika "Logout", maka:
+///        a. Muncul SnackBar "Logout Successful!"
+///        b. User diarahkan kembali ke `home_page.dart` (route '/')
+/// 4. Struktur kode tetap modular dengan fungsi kecil seperti `_buildProfileSection`, `_buildSettingItem`, dan `_showLogoutDialog`.

@@ -12,6 +12,10 @@ class CategoriesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Define the color palette from AccountPage
+    const Color primaryColor = Color(0xFF4C53A5);
+    const Color secondaryColor = Color(0xFF6B7CDA);
+    
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
@@ -29,24 +33,51 @@ class CategoriesWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.withValues(alpha: 0.5),
-                          spreadRadius: 2,
-                          blurRadius: 10,
-                          offset: const Offset(0, 3),
+                          color: primaryColor.withOpacity(0.2),
+                          spreadRadius: 1,
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
                         ),
                       ],
+                      border: Border.all(
+                        color: primaryColor.withOpacity(0.3),
+                        width: 1,
+                      ),
                     ),
-                    child: Image.asset(
-                      cat['image']!,
+                    child: Container(
                       width: 50,
                       height: 50,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(Icons.error, size: 50);
-                      },
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [Color(0xFF4C53A5), Color(0xFF6B7CDA)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          cat['image']!,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.category, 
+                                size: 30, color: Colors.white);
+                          },
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Text(cat['name']!),
+                  Text(
+                    cat['name']!,
+                    style: const TextStyle(
+                      color: Color(0xFF4C53A5),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ),
             );

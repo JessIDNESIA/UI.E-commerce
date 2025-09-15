@@ -1,5 +1,3 @@
-// lib/widgets/CartBottomNavBar.dart
-
 import 'package:flutter/material.dart';
 
 class CartBottomNavBar extends StatefulWidget {
@@ -9,9 +7,14 @@ class CartBottomNavBar extends StatefulWidget {
   State<CartBottomNavBar> createState() => _CartBottomNavBarState();
 }
 
-class _CartBottomNavBarState extends State<CartBottomNavBar> with SingleTickerProviderStateMixin {
+class _CartBottomNavBarState extends State<CartBottomNavBar>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+
+  // Mendefinisikan palet warna yang konsisten
+  static const Color primaryColor = Color(0xFF4C53A5);
+  static const Color secondaryColor = Color(0xFF6B7CDA);
 
   @override
   void initState() {
@@ -21,7 +24,10 @@ class _CartBottomNavBarState extends State<CartBottomNavBar> with SingleTickerPr
       duration: const Duration(milliseconds: 200),
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
     );
   }
 
@@ -37,73 +43,101 @@ class _CartBottomNavBarState extends State<CartBottomNavBar> with SingleTickerPr
 
   void _onTapUp(TapUpDetails details) {
     _controller.reverse();
-    // Aksi checkout
-     ScaffoldMessenger.of(context).showSnackBar(
+    // Aksi checkout visual
+    ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Proses Checkout... (Visual)')),
     );
+  }
+
+  void _onTapCancel() {
+    _controller.reverse();
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 15,
+              spreadRadius: 1,
+              offset: const Offset(0, -2),
             ),
           ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Total:",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+            // Row untuk Total Harga
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Total:",
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                Text(
-                  "\$250",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                )
-              ],
+                  const Text(
+                    "\$250.00",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: primaryColor,
+                    ),
+                  )
+                ],
+              ),
             ),
-            const SizedBox(height: 16),
+            
+            // Tombol Checkout dengan efek skala
             GestureDetector(
               onTapDown: _onTapDown,
               onTapUp: _onTapUp,
-              onTapCancel: () {
-                _controller.reverse();
-              },
+              onTapCancel: _onTapCancel,
               child: ScaleTransition(
                 scale: _scaleAnimation,
                 child: Container(
                   width: double.infinity,
-                  height: 45,
+                  height: 50,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(12),
+                    gradient: const LinearGradient(
+                      colors: [
+                        primaryColor,
+                        secondaryColor,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: primaryColor.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
                   child: const Center(
                     child: Text(
                       "Check Out",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                        color: Colors.white,
+                        letterSpacing: 0.5,
                       ),
                     ),
                   ),

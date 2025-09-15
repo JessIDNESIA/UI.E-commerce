@@ -6,6 +6,8 @@ import 'pages/account_page.dart';
 import 'pages/cart_page.dart';
 import 'pages/home_page.dart';
 import 'pages/change_password_page.dart';
+import 'pages/list_chat.dart';
+import 'pages/detail_chat.dart';
 
 void main() {
   runApp(const MyApp()); // ✅ const
@@ -30,6 +32,8 @@ class MyApp extends StatelessWidget {
         '/cart': (context) => const CartPage(),
         '/home': (context) => const HomePage(), // ✅ sudah diperbaiki dari Homepage
         '/change_password': (context) => const ChangePasswordPage(),
+        '/chat/list': (context) => const ListChatPage(),
+        '/chat/detail': (context) => const DetailChatPage(),
       },
     );
   }

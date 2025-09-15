@@ -1,5 +1,3 @@
-// lib/pages/cart_page.dart
-
 import 'package:flutter/material.dart';
 import '../widgets/cart_app_bar.dart';
 import '../widgets/cart_bottom_nav_bar.dart';
@@ -16,6 +14,12 @@ class _CartPageState extends State<CartPage> {
   bool _isCouponVisible = false;
   final TextEditingController _couponController = TextEditingController();
 
+  // Mendefinisikan palet warna yang konsisten
+  static const Color primaryColor = Color(0xFF4C53A5);
+  static const Color secondaryColor = Color(0xFF6B7CDA);
+  static const Color gradientStart = Color(0xFF4C53A5);
+  static const Color gradientEnd = Color(0xFF6B7CDA);
+
   @override
   void dispose() {
     _couponController.dispose();
@@ -25,22 +29,25 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // PERBAIKAN 1: Menggunakan AppBar dari ThemeData untuk konsistensi
       appBar: AppBar(
         title: const Text("Keranjang Saya"),
-        // Properti seperti backgroundColor, foregroundColor, dan elevation
-        // akan otomatis diambil dari tema yang didefinisikan di MaterialApp.
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [gradientStart, gradientEnd],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
       ),
       body: ListView(
-        // PERBAIKAN 2: Padding yang benar untuk menangani BottomNavBar.
-        // Menambahkan padding di bawah ListView adalah cara yang lebih baik
-        // daripada menggunakan SizedBox di akhir.
-        // Nilai 80 diasumsikan sebagai tinggi CartBottomNavBar.
         padding: const EdgeInsets.only(top: 10, bottom: 90),
         children: [
           const CartItemSamples(),
-          // PERBAIKAN 3: Mengekstrak bagian kupon ke dalam method terpisah
-          // agar widget build utama lebih bersih dan mudah dibaca.
           _buildCouponSection(context),
         ],
       ),
@@ -48,14 +55,23 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  /// Method untuk membangun UI bagian kupon.
+  /// Metode untuk membangun UI bagian kupon.
   Widget _buildCouponSection(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 10,
+            spreadRadius: 1,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         children: [
           // Tombol untuk menampilkan/menyembunyikan input kupon
@@ -65,30 +81,41 @@ class _CartPageState extends State<CartPage> {
                 _isCouponVisible = !_isCouponVisible;
               });
             },
-            child: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary,
-                    borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.local_offer_outlined,
+                        color: primaryColor,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        "Gunakan Kode Kupon",
+                        style: TextStyle(
+                          color: primaryColor,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Icon(
-                    Icons.add,
-                    color: colorScheme.onPrimary,
+                  Icon(
+                    _isCouponVisible ? Icons.expand_less : Icons.expand_more,
+                    color: primaryColor,
+                    size: 22,
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    "Tambahkan Kode Kupon",
-                    style: TextStyle(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                )
-              ],
+                ],
+              ),
             ),
           ),
 
@@ -100,43 +127,60 @@ class _CartPageState extends State<CartPage> {
               visible: _isCouponVisible,
               child: Padding(
                 padding: const EdgeInsets.only(top: 15.0),
-                child: Row(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _couponController,
-                        decoration: InputDecoration(
-                          hintText: "Masukkan Kode Kupon",
-                          hintStyle: TextStyle(color: theme.hintColor.withOpacity(0.7)),
-                          filled: true,
-                          fillColor: colorScheme.surfaceVariant.withOpacity(0.5),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    TextField(
+                      controller: _couponController,
+                      decoration: InputDecoration(
+                        hintText: "Masukkan kode kupon di sini",
+                        hintStyle: TextStyle(color: Colors.grey[600]),
+                        filled: true,
+                        fillColor: Colors.grey[50],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
                         ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Tambahkan logika untuk menerapkan kupon di sini
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Kupon berhasil diterapkan!')),
-                        );
-                        // Sembunyikan keyboard
-                        FocusScope.of(context).unfocus();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colorScheme.primary,
-                        foregroundColor: colorScheme.onPrimary,
-                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_couponController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Masukkan kode kupon terlebih dahulu')),
+                            );
+                            return;
+                          }
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    'Kupon "${_couponController.text}" berhasil diterapkan!')),
+                          );
+                          FocusScope.of(context).unfocus();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          "Terapkan Kupon",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
                         ),
                       ),
-                      child: const Text("Terapkan"),
                     ),
                   ],
                 ),
