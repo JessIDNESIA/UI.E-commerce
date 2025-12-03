@@ -6,6 +6,7 @@ import '../widgets/categories_widget.dart';
 import '../widgets/items_widget.dart';
 import 'cart_page.dart';
 import 'account_page.dart';
+import 'list_chat.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -37,6 +38,7 @@ class _HomePageState extends State<HomePage> {
         children: const [
           HomePageContent(),
           CartPage(),
+          ListChatPage(),
           AccountPage(),
         ],
       ),
@@ -45,7 +47,8 @@ class _HomePageState extends State<HomePage> {
         items: [
           Icon(Icons.home, color: _pageIndex == 0 ? Colors.white : primaryColor),
           Icon(Icons.shopping_cart, color: _pageIndex == 1 ? Colors.white : primaryColor),
-          Icon(Icons.person, color: _pageIndex == 2 ? Colors.white : primaryColor),
+          Icon(Icons.notifications, color: _pageIndex == 2 ? Colors.white : primaryColor), // <--- BARIS BARU: Tambah Ikon Notifikasi
+          Icon(Icons.person, color: _pageIndex == 3 ? Colors.white : primaryColor),
         ],
         onTap: (index) {
           _pageController.animateToPage(

@@ -116,7 +116,7 @@ class AccountPage extends StatelessWidget {
           icon: Icons.notifications_outlined,
           title: 'Notifications',
           onTap: () {
-            Navigator.pushNamed(context, '/notifications');
+            Navigator.pushNamed(context, '/list_chat');
           },
         ),
         _buildSettingItem(
@@ -124,7 +124,7 @@ class AccountPage extends StatelessWidget {
           icon: Icons.help_outline,
           title: 'Help & Support',
           onTap: () {
-            Navigator.pushNamed(context, '/help');
+            Navigator.pushNamed(context, '/support_page');
           },
         ),
         _buildSettingItem(

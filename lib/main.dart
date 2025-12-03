@@ -8,6 +8,7 @@ import 'pages/home_page.dart';
 import 'pages/change_password_page.dart';
 import 'pages/list_chat.dart';
 import 'pages/detail_chat.dart';
+import 'pages/support_page.dart';
 
 void main() {
   runApp(const MyApp()); // ✅ const
@@ -34,6 +35,8 @@ class MyApp extends StatelessWidget {
         '/change_password': (context) => const ChangePasswordPage(),
         '/chat/list': (context) => const ListChatPage(),
         '/chat/detail': (context) => const DetailChatPage(),
+        '/list_chat' :(context) => const  ListChatPage(),
+        '/support_page' :(context) => const  HelpPage(),
       },
     );
   }
